@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { format } from 'date-fns';
 
 import useCountries from "@/app/hooks/useCountries";
@@ -15,6 +15,7 @@ import {
 import HeartButton from "../HeartButton";
 import Button from "../Button";
 import ClientOnly from "../ClientOnly";
+import currencyIdr from "@/app/libs/currencyIdr";
 
 interface ListingCardProps {
   data: SafeListing;
@@ -56,7 +57,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
       return reservation.totalPrice;
     }
 
-    return data.price;
+    return currencyIdr(String(data.price));
   }, [reservation, data.price]);
 
   const reservationDate = useMemo(() => {
@@ -69,6 +70,10 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
     return `${format(start, 'PP')} - ${format(end, 'PP')}`;
   }, [reservation]);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data])
 
   return (
     <div 
@@ -108,18 +113,19 @@ const ListingCard: React.FC<ListingCardProps> = ({
             />
           </div>
         </div>
-        <div className="font-semibold text-lg">
-          {location?.region}, {location?.label}
+        <div className="font-semibold truncate">
+          {/* {location?.region}, {location?.label} */}
+          {data?.title}
         </div>
         <div className="font-light text-neutral-500">
           {reservationDate || data.category}
         </div>
         <div className="flex flex-row items-center gap-1">
           <div className="font-semibold">
-            $ {price}
+            Rp {price}
           </div>
           {!reservation && (
-            <div className="font-light">night</div>
+            <div className="font-light">/ night</div>
           )}
         </div>
         {onAction && actionLabel && (
