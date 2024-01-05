@@ -77,7 +77,7 @@ const ListingReservation: React.FC<
           Total
         </div>
         <div>
-          $ {totalPrice}
+          Rp {currencyIdr(String(totalPrice))}
         </div>
       </div>
     </div>
